@@ -463,10 +463,10 @@
       meta: 'Original survey question 2 · pick one',
       type: 'single',
       options: [
-        { id:'workplace', label:'On an L&D team in the workplace', pct:57, context:'That\'s the single biggest group in the survey, and the one most of this report\'s findings are written for.' },
         { id:'consultant', label:'As a consultant or freelancer', pct:16, context:'You\'re seeing AI\'s impact on L&D across several organizations rather than from inside just one.' },
-        { id:'education', label:'In education', pct:8, context:'Some comparisons here, like question 3 on department change, were only asked of workplace teams, so they\'ll translate differently to your setting.' },
         { id:'vendor', label:'At a vendor', pct:9, context:'You\'re likely building or selling the kind of tools other respondents are busy adopting, rather than deploying them in house.' },
+        { id:'education', label:'In education', pct:8, context:'Some comparisons here, like question 3 on department change, were only asked of workplace teams, so they\'ll translate differently to your setting.' },
+        { id:'workplace', label:'On an L&D team in the workplace', pct:57, context:'That\'s the single biggest group in the survey, and the one most of this report\'s findings are written for.' },
         { id:'other', label:'Somewhere else', pct:10, context:'Treat the rest of this comparison as general context rather than a close match to your own situation.' }
       ]
     },
@@ -500,13 +500,13 @@
       warning: 'In the original survey, this question was asked only of the 298 respondents specifically in a workplace L&D or HR role. If that is not quite your role, your answer here will not be comparable, so feel free to skip ahead.',
       note: 'Figures below are each option\'s share of those 298 respondents, worked out from the published counts; the report itself prints a lower figure for each (each option\'s share of all ticks made, since people could choose more than one).',
       options: [
-        { id:'a', label:'No significant changes. We work now in the ways we always did.', labelSelf:'No significant changes. I work now in the ways I always did.', pct:30.9 },
-        { id:'b', label:'We have changed, but not primarily because of AI.', labelSelf:'I have changed, but not primarily because of AI.', pct:23.8 },
-        { id:'c', label:'The rest of the organization now approaches us for different things than before.', labelSelf:'Others now approach me for different things than before.', pct:14.4 },
-        { id:'d', label:'At least one function our team used to do is now routinely handled by AI.', labelSelf:'At least one task I used to do is now routinely handled by AI.', pct:32.2 },
         { id:'e', label:'At least one existing role has changed in nature (not just the tools used) because of AI.', labelSelf:'My role has changed in nature (not just the tools I use) because of AI.', pct:19.5 },
+        { id:'d', label:'At least one function our team used to do is now routinely handled by AI.', labelSelf:'At least one task I used to do is now routinely handled by AI.', pct:32.2 },
+        { id:'g', label:'L&D no longer exists as a centralized, dedicated function in our organization.', labelSelf:'L&D is no longer a centralized, dedicated function where I work.', pct:4.0 },
         { id:'f', label:'Most of our team now directs and reviews AI work rather than doing the work directly.', labelSelf:'I now mostly direct and review AI work rather than doing it directly.', pct:20.1 },
-        { id:'g', label:'L&D no longer exists as a centralized, dedicated function in our organization.', labelSelf:'L&D is no longer a centralized, dedicated function where I work.', pct:4.0 }
+        { id:'a', label:'No significant changes. We work now in the ways we always did.', labelSelf:'No significant changes. I work now in the ways I always did.', pct:30.9 },
+        { id:'c', label:'The rest of the organization now approaches us for different things than before.', labelSelf:'Others now approach me for different things than before.', pct:14.4 },
+        { id:'b', label:'We have changed, but not primarily because of AI.', labelSelf:'I have changed, but not primarily because of AI.', pct:23.8 }
       ]
     },
     {
@@ -518,16 +518,16 @@
       maxSelect: 3,
       options: [
         { id:'content', label:'Create learning content faster', pct:55.7, approx:true },
-        { id:'data', label:'Use data analysis to support decision-making', pct:44.5 },
-        { id:'quality', label:'Improve the quality of learning design', pct:37.1 },
-        { id:'efficiency', label:'Improve efficiency / reduce costs within L&D', pct:36.0 },
-        { id:'personalization', label:'Personalization / adaptive learning', pct:34.0, approx:true },
         { id:'discovery', label:'Facilitate information discovery', pct:23.8, approx:true },
+        { id:'identify', label:'Identify skills', pct:11.1, approx:true },
+        { id:'efficiency', label:'Improve efficiency / reduce costs within L&D', pct:36.0 },
+        { id:'quality', label:'Improve the quality of learning design', pct:37.1 },
+        { id:'other6', label:'Other', pct:2.5, uncertain:true },
+        { id:'personalization', label:'Personalization / adaptive learning', pct:34.0, approx:true },
+        { id:'testing', label:'Provide extra knowledge testing', pct:5.4, approx:true },
         { id:'practice', label:'Provide extra skills practice', pct:17.1, approx:true },
         { id:'pon', label:'Provide point-of-need performance support', pct:15.9, approx:true },
-        { id:'identify', label:'Identify skills', pct:11.1, approx:true },
-        { id:'testing', label:'Provide extra knowledge testing', pct:5.4, approx:true },
-        { id:'other6', label:'Other', pct:2.5, uncertain:true },
+        { id:'data', label:'Use data analysis to support decision-making', pct:44.5 },
         { id:'notusing', label:'We are not using AI', pct:1.7 }
       ]
     },
@@ -538,19 +538,19 @@
       meta: 'Original survey question 7 · select any that apply',
       type: 'multi',
       options: [
+        { id:'cost', label:'Concerns about cost', pct:22.9, approx:true },
         { id:'privacy', label:'Data privacy and security concerns', pct:52.0 },
-        { id:'trust', label:'Lack of trust in AI outputs', pct:35.9, approx:true },
+        { id:'businesscase', label:'Difficult to make a business case', pct:5.8 },
+        { id:'ethics', label:'Ethical and environmental concerns', pct:28.9, approx:true },
         { id:'integration', label:'Integration issues', pct:32.9, approx:true },
         { id:'skills', label:'Lack of skills in L&D team', pct:28.9, approx:true },
-        { id:'ethics', label:'Ethical and environmental concerns', pct:28.9, approx:true },
-        { id:'regulatory', label:'Regulatory or compliance barriers', pct:26.9, approx:true },
-        { id:'cost', label:'Concerns about cost', pct:22.9, approx:true },
-        { id:'time', label:'Time constraints', pct:21.9, approx:true },
-        { id:'resistance', label:'Resistance / lack of engagement', pct:20.9, approx:true },
+        { id:'trust', label:'Lack of trust in AI outputs', pct:35.9, approx:true },
+        { id:'none', label:'None of the above', pct:4.8, approx:true },
         { id:'startingpoint', label:'Not knowing where to start', pct:9.8 },
         { id:'other7', label:'Other', pct:11.8, approx:true },
-        { id:'businesscase', label:'Difficult to make a business case', pct:5.8 },
-        { id:'none', label:'None of the above', pct:4.8, approx:true }
+        { id:'regulatory', label:'Regulatory or compliance barriers', pct:26.9, approx:true },
+        { id:'resistance', label:'Resistance / lack of engagement', pct:20.9, approx:true },
+        { id:'time', label:'Time constraints', pct:21.9, approx:true }
       ]
     }
   ];
