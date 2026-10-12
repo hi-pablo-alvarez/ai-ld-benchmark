@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI in L&amp;D: How do you compare?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F2F1F5;
+    --surface: #FFFFFF;
+    --ink: #1E1D22;
+    --ink-soft: #656370;
+    --line: #E1DFE6;
+    --accent: #9B54F3;
+    --accent-soft: #EEE3FC;
+    --bench: #8B8894;
+    --bench-track: #E5E3EA;
+    --good: #3C7A5C;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #19181D;
+      --surface: #232228;
+      --ink: #EDEBF0;
+      --ink-soft: #A5A2AD;
+      --line: #37353C;
+      --accent: #B47AF5;
+      --accent-soft: #352A42;
+      --bench: #9D9AA5;
+      --bench-track: #302E35;
+      --good: #7FBE9C;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #19181D;
+    --surface: #232228;
+    --ink: #EDEBF0;
+    --ink-soft: #A5A2AD;
+    --line: #37353C;
+    --accent: #B47AF5;
+    --accent-soft: #352A42;
+    --bench: #9D9AA5;
+    --bench-track: #302E35;
+    --good: #7FBE9C;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html {
+    scroll-padding-top: env(safe-area-inset-top, 0px);
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Lato', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    line-height: 1.5;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100%;
+  }
+  h1, h2, h3, .display {
+    font-family: 'Lato', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .intro-title { font-weight: 900; }
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 28px 20px 64px;
+  }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 14px 20px 0;
+  }
+  .brand {
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+  .theme-btn {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-soft);
+    border-radius: 999px;
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .theme-btn:focus-visible, button:focus-visible, label.opt:focus-within {
+    outline: 2px solid var(--bench);
+    outline-offset: 2px;
+  }
+
+  /* Progress */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width .35s ease;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  /* Cards / screens */
+  .screen { display: none; }
+  .screen.active { display: block; animation: rise .35s ease; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .screen.active { animation: none; }
+  }
+
+  .eyebrow {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .q-title {
+    font-size: 24px;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .q-meta {
+    color: var(--ink-soft);
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+  label.opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  label.opt:hover { border-color: var(--bench); }
+  label.opt.checked {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  label.opt input { margin-top: 3px; accent-color: var(--accent); width: 17px; height: 17px; flex-shrink: 0; }
+  label.opt span.opt-text { font-size: 15.5px; }
+  label.opt.checked span.opt-text { font-weight: 700; color: var(--accent); }
+
+  .hint {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: -8px 0 18px;
+  }
+  .warning-note {
+    font-family: 'Lato', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 14.5px;
+    color: var(--ink);
+    margin: -8px 0 14px;
+    line-height: 1.5;
+  }
+  .hint.limit-hit { color: var(--accent); }
+
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 6px;
+  }
+  button.primary, a.primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    color: #FFF8F1;
+    border: none;
+    border-radius: 999px;
+    padding: 13px 26px;
+    font-size: 15.5px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  button.primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  button.ghost {
+    background: transparent;
+    border: none;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 10px 6px;
+  }
+  button.ghost:hover { color: var(--ink); }
+
+  /* Intro */
+  .intro-kicker { color: var(--ink-soft); font-size: 14px; margin-bottom: 14px; }
+  .intro-title { font-size: 34px; line-height: 1.12; margin-bottom: 16px; }
+  .intro-body { font-size: 16px; color: var(--ink-soft); margin-bottom: 10px; max-width: 54ch; }
+  .intro-body.intro-cta { font-weight: 700; color: var(--accent); }
+  .fact-row {
+    display: flex;
+    gap: 22px;
+    margin: 26px 0 30px;
+    flex-wrap: wrap;
+  }
+  .fact b { font-family: 'Lato', sans-serif; font-size: 26px; font-weight: 900; display: block; }
+
+  .scope-picker { margin-bottom: 28px; }
+  .scope-label { font-size: 13px; color: var(--ink-soft); margin-bottom: 8px; }
+  .scope-options { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--surface); }
+  .scope-btn {
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 9px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .scope-btn.active { background: var(--accent); color: #FFF8F1; }
+  .fact span { font-size: 12.5px; color: var(--ink-soft); }
+
+  /* Results */
+  .result-block { margin-bottom: 30px; }
+  .result-q { font-size: 13.5px; color: var(--ink-soft); margin-bottom: 4px; }
+  .result-title { font-size: 19px; font-weight: 700; margin-bottom: 14px; }
+  .bar-row { margin-bottom: 11px; }
+  .bar-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 14px;
+    margin-bottom: 4px;
+    gap: 10px;
+  }
+  .bar-opt-label { display: flex; align-items: center; gap: 7px; }
+  .bar-opt-label.mine { font-weight: 700; color: var(--accent); }
+  .you-tag {
+    background: var(--accent);
+    color: #FFF8F1;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .bar-pct { color: var(--ink-soft); font-size: 13px; white-space: nowrap; }
+  .bar-pct.approx::before { content: "~"; }
+  .bar-pct.uncertain { font-style: italic; }
+  .bar-pct.mine { color: var(--accent); font-weight: 700; }
+  .bar-fill.hatched {
+    background-image: repeating-linear-gradient(45deg, var(--bench), var(--bench) 4px, var(--bench-track) 4px, var(--bench-track) 8px);
+  }
+  .bar-fill.hatched.mine {
+    background-image: repeating-linear-gradient(45deg, var(--accent), var(--accent) 4px, var(--accent-soft) 4px, var(--accent-soft) 8px);
+  }
+  .bar-track {
+    height: 10px;
+    background: var(--bench-track);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    background: var(--bench);
+    transition: width .5s ease;
+  }
+  .bar-fill.mine { background: var(--accent); }
+
+  .insight {
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--accent);
+    margin-top: 4px;
+    background: var(--surface);
+    border-radius: 0 8px 8px 0;
+  }
+  .note {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .dot.mine { background: var(--accent); }
+  .dot.bench { background: var(--bench); }
+
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin: 8px 0 30px;
+  }
+  .summary-card h3 {
+    font-size: 19px;
+    margin-bottom: 10px;
+  }
+  .summary-subtitle {
+    font-size: 13px;
+    color: var(--ink);
+    margin: -4px 0 14px;
+    line-height: 1.5;
+  }
+  .summary-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .summary-line {
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.55;
+    margin-bottom: 10px;
+  }
+  .summary-line:last-child { margin-bottom: 0; }
+  .summary-label { font-weight: 700; color: var(--ink); }
+
+  .final-actions { margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .source {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 28px;
+    line-height: 1.6;
+  }
+  .skip-link { font-size: 13.5px; color: var(--ink-soft); text-decoration: underline; cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="brand">AI in L&amp;D · Benchmark</span>
+  <button class="theme-btn" id="themeToggle" aria-label="Toggle color theme">◐</button>
+</div>
+
+<div class="wrap">
+
+  <!-- INTRO -->
+  <section class="screen active" id="screen-intro">
+    <div class="intro-kicker">Five questions · about two minutes</div>
+    <h1 class="intro-title">Where does your L&amp;D team stand on AI?</h1>
+    <p class="intro-body">In 2026, L&D professionals Donald H Taylor and Eglė Vinauskaitė asked 531 learning and development practitioners in 55 countries how AI is showing up in their work, for the report <em>AI in L&amp;D 2026: Around the Core</em>.</p>
+    <p class="intro-body intro-cta">Answer the same multiple-choice questions they did, and see exactly where your answers sit against that benchmark, question by question.</p>
+
+    <div class="fact-row">
+      <div class="fact"><b>531</b><span>practitioners surveyed</span></div>
+      <div class="fact"><b>55</b><span>countries</span></div>
+      <div class="fact"><b>68%</b><span>now using AI in L&amp;D</span></div>
+    </div>
+
+    <div class="scope-picker">
+      <div class="scope-label">Answering for:</div>
+      <div class="scope-options">
+        <button type="button" class="scope-btn active" id="scopeTeam" data-scope="team">My team or department</button>
+        <button type="button" class="scope-btn" id="scopeSelf" data-scope="self">Just me</button>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="primary" id="startBtn">Start</button>
+      <span></span>
+    </div>
+    <p class="source">An independent, unofficial companion to <em>AI in L&amp;D 2026: Around the Core</em> by Donald H Taylor and Eglė Vinauskaitė. Most figures are the report's own. A few unpublished chart values were measured directly (marked ~), one was too small to measure reliably and is shown as a range, and Question 4 shows each option's share of respondents rather than the report's own smaller share-of-selections figure.</p>
+    <p class="source">Developed by Pablo Alvarez.</p>
+  </section>
+
+  <!-- QUESTION SCREENS inserted by JS -->
+  <div id="question-mount"></div>
+
+  <!-- RESULTS -->
+  <section class="screen" id="screen-results">
+    <div class="eyebrow">Your results</div>
+    <h2 class="q-title" style="margin-bottom:20px;">How you compare with the 2026 survey</h2>
+    <div class="legend">
+      <span><i class="dot mine"></i> Your answer</span>
+      <span><i class="dot bench"></i> 2026 survey benchmark</span>
+      <span>~ = read from the chart, not printed as a number</span>
+      <span>hatched = too small to measure reliably</span>
+    </div>
+    <p class="hint" style="margin-top:-18px;">Bars are scaled to the highest answer within each question, so compare the printed percentages across different questions, not the bar widths.</p>
+    <div id="results-mount"></div>
+    <div id="summary-mount"></div>
+    <div class="final-actions" style="display:flex; gap:12px; flex-wrap:wrap;">
+      <button class="primary" id="restartBtn">Start again</button>
+      <button class="ghost" id="copyBtn" style="border:1px solid var(--line); border-radius:999px; padding:12px 22px;">Copy my results</button>
+    </div>
+    <p class="source">Benchmark figures: <em>AI in L&amp;D 2026: Around the Core</em>, Donald H Taylor &amp; Eglė Vinauskaitė, October 2026 (531 respondents; Q4 figures are based on the 298 respondents working in workplace L&amp;D/HR teams). This comparison tool is unofficial and not produced by the report's authors.</p>
+  </section>
+
+</div>
+
+<script>
+(function(){
+
+  // ---------- Theme ----------
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  toggle.addEventListener('click', function(){
+    var cur = root.getAttribute('data-theme');
+    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var effectiveDark = cur === 'dark' || (!cur && prefersDark);
+    root.setAttribute('data-theme', effectiveDark ? 'light' : 'dark');
+  });
+
+  // ---------- Benchmark data ----------
+  var QUESTIONS = [
+    {
+      id: 'q2',
+      kicker: 'Question 1 of 5',
+      title: 'Where do you work?',
+      meta: 'Original survey question 2 · pick one',
+      type: 'single',
+      options: [
+        { id:'workplace', label:'On an L&D team in the workplace', pct:57, context:'That\'s the single biggest group in the survey, and the one most of this report\'s findings are written for.' },
+        { id:'consultant', label:'As a consultant or freelancer', pct:16, context:'You\'re seeing AI\'s impact on L&D across several organizations rather than from inside just one.' },
+        { id:'education', label:'In education', pct:8, context:'Some comparisons here, like question 3 on department change, were only asked of workplace teams, so they\'ll translate differently to your setting.' },
+        { id:'vendor', label:'At a vendor', pct:9, context:'You\'re likely building or selling the kind of tools other respondents are busy adopting, rather than deploying them in house.' },
+        { id:'other', label:'Somewhere else', pct:10, context:'Treat the rest of this comparison as general context rather than a close match to your own situation.' }
+      ]
+    },
+    {
+      id: 'q3',
+      kicker: 'Question 2 of 5',
+      title: 'How would you describe your progress in using AI in workplace L&D?',
+      meta: 'Original survey question 3 · pick one',
+      type: 'single',
+      phaseBenchmarks: { preuse: 6, experimenting: 26, using: 68 },
+      phaseLabel: { preuse: 'Pre-use', experimenting: 'Experimenting / piloting', using: 'Using AI' },
+      options: [
+        { id:'o1', label:'Our organization has no intention of using AI as part of L&D', labelSelf:'I have no intention of using AI as part of my L&D work', phase:'preuse' },
+        { id:'o2', label:'Our organization has not begun exploring the role of AI in L&D', labelSelf:'I have not begun exploring the role of AI in my L&D work', phase:'preuse' },
+        { id:'o3', label:'Our organization has experimented with AI tools in L&D, but has not implemented anything', labelSelf:'I have experimented with AI tools in my L&D work, but have not implemented anything', phase:'experimenting' },
+        { id:'o4', label:'Our organization is currently piloting the use of AI in L&D', labelSelf:'I am currently piloting the use of AI in my L&D work', phase:'experimenting' },
+        { id:'o5', label:'Our organization is using AI in some parts of our work in L&D', labelSelf:'I am using AI in some parts of my L&D work', phase:'using' },
+        { id:'o6', label:'Our organization is using AI extensively as an integral part of our work in L&D', labelSelf:'I am using AI extensively as an integral part of my L&D work', phase:'using' }
+      ]
+    },
+    {
+      id: 'q4',
+      kicker: 'Question 3 of 5',
+      title: 'Which of the following has changed in your L&D department in the past 12 months, as a result of AI?',
+      meta: 'Original survey question 4 · optional · select any that apply',
+      type: 'multi',
+      optional: true,
+      maxSelect: null,
+      gateOn: { q: 'q2', value: 'workplace' },
+      gateNote: 'In the original survey this question was only asked of people on a workplace L&D or HR team, so it is skipped based on your answer to question 1.',
+      warning: 'In the original survey, this question was asked only of the 298 respondents specifically in a workplace L&D or HR role. If that is not quite your role, your answer here will not be comparable, so feel free to skip ahead.',
+      note: 'Figures below are each option\'s share of those 298 respondents, worked out from the published counts; the report itself prints a lower figure for each (each option\'s share of all ticks made, since people could choose more than one).',
+      options: [
+        { id:'a', label:'No significant changes. We work now in the ways we always did.', labelSelf:'No significant changes. I work now in the ways I always did.', pct:30.9 },
+        { id:'b', label:'We have changed, but not primarily because of AI.', labelSelf:'I have changed, but not primarily because of AI.', pct:23.8 },
+        { id:'c', label:'The rest of the organization now approaches us for different things than before.', labelSelf:'Others now approach me for different things than before.', pct:14.4 },
+        { id:'d', label:'At least one function our team used to do is now routinely handled by AI.', labelSelf:'At least one task I used to do is now routinely handled by AI.', pct:32.2 },
+        { id:'e', label:'At least one existing role has changed in nature (not just the tools used) because of AI.', labelSelf:'My role has changed in nature (not just the tools I use) because of AI.', pct:19.5 },
+        { id:'f', label:'Most of our team now directs and reviews AI work rather than doing the work directly.', labelSelf:'I now mostly direct and review AI work rather than doing it directly.', pct:20.1 },
+        { id:'g', label:'L&D no longer exists as a centralized, dedicated function in our organization.', labelSelf:'L&D is no longer a centralized, dedicated function where I work.', pct:4.0 }
+      ]
+    },
+    {
+      id: 'q6',
+      kicker: 'Question 4 of 5',
+      title: 'Select up to 3 benefits you expect to see from your use of AI in L&D.',
+      meta: 'Original survey question 6 · pick up to 3',
+      type: 'multi',
+      maxSelect: 3,
+      options: [
+        { id:'content', label:'Create learning content faster', pct:55.7, approx:true },
+        { id:'data', label:'Use data analysis to support decision-making', pct:44.5 },
+        { id:'quality', label:'Improve the quality of learning design', pct:37.1 },
+        { id:'efficiency', label:'Improve efficiency / reduce costs within L&D', pct:36.0 },
+        { id:'personalization', label:'Personalization / adaptive learning', pct:34.0, approx:true },
+        { id:'discovery', label:'Facilitate information discovery', pct:23.8, approx:true },
+        { id:'practice', label:'Provide extra skills practice', pct:17.1, approx:true },
+        { id:'pon', label:'Provide point-of-need performance support', pct:15.9, approx:true },
+        { id:'identify', label:'Identify skills', pct:11.1, approx:true },
+        { id:'testing', label:'Provide extra knowledge testing', pct:5.4, approx:true },
+        { id:'other6', label:'Other', pct:2.5, uncertain:true },
+        { id:'notusing', label:'We are not using AI', pct:1.7 }
+      ]
+    },
+    {
+      id: 'q7',
+      kicker: 'Question 5 of 5',
+      title: 'What barriers, if any, are you experiencing in your work with AI?',
+      meta: 'Original survey question 7 · select any that apply',
+      type: 'multi',
+      options: [
+        { id:'privacy', label:'Data privacy and security concerns', pct:52.0 },
+        { id:'trust', label:'Lack of trust in AI outputs', pct:35.9, approx:true },
+        { id:'integration', label:'Integration issues', pct:32.9, approx:true },
+        { id:'skills', label:'Lack of skills in L&D team', pct:28.9, approx:true },
+        { id:'ethics', label:'Ethical and environmental concerns', pct:28.9, approx:true },
+        { id:'regulatory', label:'Regulatory or compliance barriers', pct:26.9, approx:true },
+        { id:'cost', label:'Concerns about cost', pct:22.9, approx:true },
+        { id:'time', label:'Time constraints', pct:21.9, approx:true },
+        { id:'resistance', label:'Resistance / lack of engagement', pct:20.9, approx:true },
+        { id:'startingpoint', label:'Not knowing where to start', pct:9.8 },
+        { id:'other7', label:'Other', pct:11.8, approx:true },
+        { id:'businesscase', label:'Difficult to make a business case', pct:5.8 },
+        { id:'none', label:'None of the above', pct:4.8, approx:true }
+      ]
+    }
+  ];
+
+  var answers = {};
+  var scope = 'team'; // 'team' or 'self', set from the intro screen toggle
+  var gatedSkipped = {}; // q.id -> true when auto-skipped because its gate condition wasn't met
+
+  function optLabel(opt){
+    return (scope === 'self' && opt.labelSelf) ? opt.labelSelf : opt.label;
+  }
+  var current = 0; // index into QUESTIONS, -1 = intro, QUESTIONS.length = results
+  var mount = document.getElementById('question-mount');
+
+  function isApplicable(q){
+    if (!q.gateOn) return true;
+    var gateAnswers = answers[q.gateOn.q] || [];
+    return gateAnswers.indexOf(q.gateOn.value) > -1;
+  }
+
+  function nextVisibleIndex(fromQi){
+    var i = fromQi + 1;
+    while (i < QUESTIONS.length && !isApplicable(QUESTIONS[i])) {
+      gatedSkipped[QUESTIONS[i].id] = true;
+      i++;
+    }
+    if (i < QUESTIONS.length) delete gatedSkipped[QUESTIONS[i].id]; // landing on it now, so any stale gate flag no longer applies
+    return i; // may equal QUESTIONS.length, meaning results
+  }
+
+  function prevVisibleIndex(fromQi){
+    var i = fromQi - 1;
+    while (i >= 0 && !isApplicable(QUESTIONS[i])) { i--; }
+    return i; // may be -1, meaning intro
+  }
+
+  // ---------- Build question screens ----------
+  QUESTIONS.forEach(function(q, qi){
+    var section = document.createElement('section');
+    section.className = 'screen';
+    section.id = 'screen-' + q.id;
+
+    var progressPct = Math.round(((qi) / QUESTIONS.length) * 100);
+    var html = '';
+    html += '<div class="progress-row"><div class="progress-track"><div class="progress-fill" style="width:' + progressPct + '%"></div></div>';
+    html += '<span class="progress-label">' + (qi+1) + ' / ' + QUESTIONS.length + '</span></div>';
+    html += '<div class="eyebrow">' + q.kicker + '</div>';
+    html += '<h2 class="q-title">' + q.title + '</h2>';
+    html += '<div class="q-meta">' + q.meta + '</div>';
+    if (q.warning) html += '<p class="warning-note">' + q.warning + '</p>';
+    if (q.note) html += '<p class="hint" style="margin-top:-12px;">' + q.note + '</p>';
+    html += '<div class="options" role="group">';
+    q.options.forEach(function(opt){
+      var inputType = q.type === 'single' ? 'radio' : 'checkbox';
+      html += '<label class="opt" data-opt="' + opt.id + '">';
+      html += '<input type="' + inputType + '" name="' + q.id + '" value="' + opt.id + '">';
+      html += '<span class="opt-text" data-q="' + q.id + '" data-opt="' + opt.id + '">' + optLabel(opt) + '</span>';
+      html += '</label>';
+    });
+    html += '</div>';
+    if (q.maxSelect) html += '<p class="hint" id="hint-' + q.id + '">Choose up to ' + q.maxSelect + '.</p>';
+    html += '<div class="nav-row">';
+    html += '<button class="ghost" data-back="' + qi + '">Back</button>';
+    html += '<div style="display:flex; gap:14px; align-items:center;">';
+    if (q.optional) html += '<button class="skip-link" data-skip="' + q.id + '">Skip</button>';
+    html += '<button class="primary" id="next-' + q.id + '" disabled>Next</button>';
+    html += '</div></div>';
+
+    section.innerHTML = html;
+    mount.appendChild(section);
+  });
+
+  // ---------- Navigation ----------
+  function showScreen(id){
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
+  }
+
+  function refreshOptionText(){
+    QUESTIONS.forEach(function(q){
+      q.options.forEach(function(opt){
+        var span = document.querySelector('.opt-text[data-q="' + q.id + '"][data-opt="' + opt.id + '"]');
+        if (span) span.textContent = optLabel(opt);
+      });
+    });
+  }
+
+  document.querySelectorAll('.scope-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      scope = btn.getAttribute('data-scope');
+      document.querySelectorAll('.scope-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      refreshOptionText();
+    });
+  });
+
+  document.getElementById('startBtn').addEventListener('click', function(){
+    current = 0;
+    showScreen('screen-' + QUESTIONS[0].id);
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', copyResults);
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    answers = {};
+    gatedSkipped = {};
+    document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(function(i){ i.checked = false; });
+    document.querySelectorAll('label.opt').forEach(function(l){ l.classList.remove('checked'); });
+    document.querySelectorAll('button[id^=next-]').forEach(function(b){ b.disabled = true; });
+    current = -1;
+    showScreen('screen-intro');
+  });
+
+  QUESTIONS.forEach(function(q, qi){
+    var section = document.getElementById('screen-' + q.id);
+    var nextBtn = document.getElementById('next-' + q.id);
+
+    function validate(){
+      var picked = answers[q.id] || [];
+      if (q.optional) { nextBtn.disabled = false; return; }
+      nextBtn.disabled = picked.length === 0;
+    }
+
+    section.querySelectorAll('input').forEach(function(input){
+      input.addEventListener('change', function(){
+        var label = input.closest('label.opt');
+        if (q.type === 'single') {
+          section.querySelectorAll('label.opt').forEach(function(l){ l.classList.remove('checked'); });
+          label.classList.add('checked');
+          answers[q.id] = [input.value];
+        } else {
+          var picked = answers[q.id] ? answers[q.id].slice() : [];
+          if (input.checked) {
+            if (q.maxSelect && picked.length >= q.maxSelect) {
+              input.checked = false;
+              var hint = document.getElementById('hint-' + q.id);
+              if (hint) { hint.classList.add('limit-hit'); hint.textContent = 'You can only choose up to ' + q.maxSelect + '. Untick one first.'; }
+              return;
+            }
+            picked.push(input.value);
+            label.classList.add('checked');
+          } else {
+            picked = picked.filter(function(v){ return v !== input.value; });
+            label.classList.remove('checked');
+          }
+          answers[q.id] = picked;
+          var hint2 = document.getElementById('hint-' + q.id);
+          if (hint2 && q.maxSelect) {
+            hint2.classList.remove('limit-hit');
+            hint2.textContent = picked.length + ' of ' + q.maxSelect + ' chosen.';
+          }
+        }
+        validate();
+      });
+    });
+
+    section.querySelector('[data-back]').addEventListener('click', function(){
+      var prev = prevVisibleIndex(qi);
+      current = prev;
+      if (prev < 0) { showScreen('screen-intro'); }
+      else { showScreen('screen-' + QUESTIONS[prev].id); }
+    });
+
+    var skipBtn = section.querySelector('[data-skip]');
+    if (skipBtn) skipBtn.addEventListener('click', function(){
+      answers[q.id] = [];
+      goNext(qi);
+    });
+
+    nextBtn.addEventListener('click', function(){ goNext(qi); });
+
+    validate();
+  });
+
+  function goNext(qi){
+    var next = nextVisibleIndex(qi);
+    if (next < QUESTIONS.length) {
+      current = next;
+      showScreen('screen-' + QUESTIONS[next].id);
+    } else {
+      renderResults();
+      current = QUESTIONS.length;
+      showScreen('screen-results');
+    }
+  }
+
+  // ---------- Results ----------
+  function pctLabel(pct, approx, uncertain, mine){
+    var mineClass = mine ? ' mine' : '';
+    if (uncertain) {
+      return '<span class="bar-pct uncertain' + mineClass + '">2&ndash;5%?</span>';
+    }
+    var val = (Math.round(pct*10)/10);
+    val = (val % 1 === 0) ? val.toFixed(0) : val.toFixed(1);
+    return '<span class="bar-pct' + (approx ? ' approx' : '') + mineClass + '">' + val + '%</span>';
+  }
+
+  function renderResults(){
+    var mount = document.getElementById('results-mount');
+    mount.innerHTML = '';
+
+    QUESTIONS.forEach(function(q){
+      var block = document.createElement('div');
+      block.className = 'result-block';
+      var picked = answers[q.id] || [];
+
+      var html = '<div class="result-q">' + q.meta.split(' · ')[0] + '</div>';
+      html += '<div class="result-title">' + q.title + '</div>';
+
+      if (gatedSkipped[q.id] && !picked.length) {
+        html += '<div class="insight">Not applicable to you. ' + q.gateNote + '</div>';
+      } else if (q.id === 'q2') {
+        // descriptive context, not a competitive ranking
+        var sorted2 = q.options.slice().sort(function(a,b){ return b.pct - a.pct; });
+        var max2 = sorted2[0].pct;
+        sorted2.forEach(function(opt){
+          var mine = picked.indexOf(opt.id) > -1;
+          html += barRow(optLabel(opt), opt.pct, opt.approx, mine, opt.uncertain, max2);
+        });
+        html += '<div class="insight">' + whereYouWorkInsight(picked, sorted2) + '</div>';
+      } else if (q.id === 'q3') {
+        // phase comparison
+        var pickedPhase = null;
+        if (picked.length) {
+          var opt = q.options.filter(function(o){ return o.id === picked[0]; })[0];
+          pickedPhase = opt ? opt.phase : null;
+        }
+        var maxPhase = Math.max(q.phaseBenchmarks.preuse, q.phaseBenchmarks.experimenting, q.phaseBenchmarks.using);
+        ['preuse','experimenting','using'].forEach(function(phase){
+          var pct = q.phaseBenchmarks[phase];
+          var mine = phase === pickedPhase;
+          html += barRow(q.phaseLabel[phase], pct, false, mine, false, maxPhase);
+        });
+        html += '<div class="insight">' + (pickedPhase ? phaseInsight(pickedPhase, q) : 'No answer given for this question.') + '</div>';
+      } else {
+        var sorted = q.options.slice().sort(function(a,b){ return b.pct - a.pct; });
+        var maxOther = sorted[0].pct;
+        sorted.forEach(function(opt){
+          var mine = picked.indexOf(opt.id) > -1;
+          html += barRow(optLabel(opt), opt.pct, opt.approx, mine, opt.uncertain, maxOther);
+        });
+        html += '<div class="insight">' + choiceInsight(q, picked, sorted) + '</div>';
+      }
+
+      block.innerHTML = html;
+      mount.appendChild(block);
+    });
+
+    buildSummary();
+  }
+
+  function computeSummarySignals(){
+    var q3picked = answers.q3 || [];
+    var phaseOpt = null;
+    if (q3picked.length) {
+      var q3q = QUESTIONS.filter(function(q){ return q.id === 'q3'; })[0];
+      var o = q3q.options.filter(function(o){ return o.id === q3picked[0]; })[0];
+      phaseOpt = o ? o.phase : null;
+    }
+
+    var q4Applicable = !gatedSkipped['q4'];
+    var q4Picked = answers.q4 || [];
+    var q4HasDeepChange = ['d','e','f'].some(function(id){ return q4Picked.indexOf(id) > -1; });
+    var q4OnlyNoChange = q4Picked.indexOf('a') > -1 && !q4HasDeepChange;
+
+    var q6Picked = answers.q6 || [];
+    var q6NotUsing = q6Picked.indexOf('notusing') > -1;
+
+    var q7Picked = answers.q7 || [];
+    var q7Real = q7Picked.filter(function(id){ return id !== 'none'; });
+    var q7NoneOnly = q7Picked.indexOf('none') > -1 && q7Real.length === 0;
+
+    var teamOperates = scope === 'self' ? 'you work' : 'your team operates';
+    var teamDoes = scope === 'self' ? 'what you actually do' : 'what your team actually does';
+    var ownTeamSits = scope === 'self' ? 'where you stand today' : 'where your own team sits today';
+    var orgsCanSay = scope === 'self' ? 'people can say' : 'organizations can say';
+
+    var phaseLead = null;
+    if (phaseOpt === 'using') phaseLead = 'You\'re already using AI in L&D, putting you with the 68% majority this year.';
+    else if (phaseOpt === 'experimenting') phaseLead = 'You\'re still experimenting or piloting AI in L&D, the stage about a quarter of 2026 respondents are in.';
+    else if (phaseOpt === 'preuse') phaseLead = (scope === 'self' ? 'You haven\'t' : 'Your organization hasn\'t') + ' started exploring AI in L&D yet, a stage only 6% of respondents are still in.';
+
+    var strength;
+    if (q7NoneOnly) {
+      strength = 'You report facing none of the common barriers, data privacy, trust, skills gaps, and so on, a position most L&D teams haven\'t reached yet.';
+    } else if (phaseOpt === 'using') {
+      strength = 'It\'s a working part of how ' + teamOperates + ' now, not just something you\'re testing.';
+    } else if (q4Applicable && q4HasDeepChange && phaseOpt !== 'preuse') {
+      strength = 'AI hasn\'t just sped things up for you, it\'s changed ' + teamDoes + ' day to day, a deeper shift than most respondents report.';
+    } else if (q7Picked.length && q7Real.length > 0 && q7Real.length <= 2) {
+      strength = 'You\'re naming fewer obstacles than most, just ' + q7Real.length + ', against an average of 2.89 per respondent this year.';
+    } else if (q6Picked.length && !q6NotUsing) {
+      strength = 'You\'re clear on what you want from AI to begin with, ahead of the 1.7% still not using it at all.';
+    } else {
+      strength = 'At minimum, you\'ve got a clear read on ' + ownTeamSits + ', which is more than a lot of ' + orgsCanSay + '.';
+    }
+    if (phaseOpt === 'using') strength = phaseLead + ' ' + strength;
+
+    var watch;
+    if (phaseOpt === 'preuse') {
+      watch = 'There\'s real catching up to do: 94% of other respondents have at least started.';
+    } else if (q6NotUsing && phaseOpt !== 'using') {
+      watch = 'Worth flagging: you said you\'re not using AI at all, something only 1.7% of respondents now say.';
+    } else if (q7Real.length >= 5) {
+      watch = 'You\'re facing more friction than most, naming ' + q7Real.length + ' barriers against an average of 2.89, so it may be worth tackling one at a time rather than all at once.';
+    } else if (q4Applicable && q4OnlyNoChange) {
+      watch = 'On the ground, though, not much has actually changed yet, a common gap between what teams expect from AI and what\'s really shifted day to day.';
+    } else if (phaseOpt === 'experimenting') {
+      watch = 'This group has shrunk fast, from 49% of respondents three years ago to 26% now, while the share already using AI regularly has climbed to 68% over the same period.';
+    } else {
+      watch = 'Nothing here points to an obvious gap, though new friction often shows up only once a team scales past the pilot stage.';
+    }
+    if (phaseOpt === 'experimenting' || phaseOpt === 'preuse') watch = phaseLead + ' ' + watch;
+
+    return { strength: strength, watch: watch };
+  }
+
+  function buildSummary(){
+    var mount = document.getElementById('summary-mount');
+    var s = computeSummarySignals();
+    var html = '<div class="summary-card">';
+    html += '<h3>So, Where Do You Stand?</h3>';
+    html += '<p class="summary-subtitle">A quick read of your five answers together: one thing working in your favor, and one thing worth a closer look.</p>';
+    html += '<ul class="summary-list">';
+    html += '<li class="summary-line strength">\uD83D\uDC4C <span class="summary-label">Strength:</span> ' + s.strength + '</li>';
+    html += '<li class="summary-line watch">\uD83D\uDC40 <span class="summary-label">Keep an eye on:</span> ' + s.watch + '</li>';
+    html += '</ul>';
+    html += '</div>';
+    mount.innerHTML = html;
+  }
+
+  function buildPlainTextSummary(){
+    var lines = [];
+    lines.push('AI IN L&D 2026 - MY RESULTS VS. THE BENCHMARK');
+    lines.push('');
+    QUESTIONS.forEach(function(q){
+      var picked = answers[q.id] || [];
+      lines.push(q.title);
+      if (gatedSkipped[q.id] && !picked.length) {
+        lines.push('  Not applicable (workplace L&D/HR only)');
+      } else if (!picked.length) {
+        lines.push('  (skipped)');
+      } else if (q.id === 'q3') {
+        var opt = q.options.filter(function(o){ return o.id === picked[0]; })[0];
+        lines.push('  My answer: ' + (opt ? optLabel(opt) : picked[0]));
+        if (opt) lines.push('  Benchmark: ' + q.phaseLabel[opt.phase] + ' = ' + q.phaseBenchmarks[opt.phase] + '% of 2026 respondents');
+      } else {
+        picked.forEach(function(id){
+          var opt = q.options.filter(function(o){ return o.id === id; })[0];
+          if (!opt) return;
+          var pctStr = opt.uncertain ? '2-5%, uncertain' : (opt.approx ? '~' : '') + (Math.round(opt.pct*10)/10) + '%';
+          lines.push('  - ' + optLabel(opt) + ' (2026 benchmark: ' + pctStr + ')');
+        });
+      }
+      lines.push('');
+    });
+    var s = computeSummarySignals();
+    lines.push('SO, WHERE DO YOU STAND?');
+    lines.push('\uD83D\uDC4C Strength: ' + s.strength);
+    lines.push('\uD83D\uDC40 Keep an eye on: ' + s.watch);
+    lines.push('');
+    lines.push('Benchmark source: "AI in L&D 2026: Around the Core" by Donald H Taylor and Egle Vinauskaite (531 respondents). Unofficial comparison tool developed by Pablo Alvarez.');
+    return lines.join('\n');
+  }
+
+  function copyResults(){
+    var text = buildPlainTextSummary();
+    var btn = document.getElementById('copyBtn');
+    var done = function(ok){
+      if (!btn) return;
+      btn.textContent = ok ? 'Copied!' : 'Could not copy, see console';
+      setTimeout(function(){ btn.textContent = 'Copy my results'; }, 2200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function(){ done(true); }).catch(function(){ fallbackCopy(text, done); });
+    } else {
+      fallbackCopy(text, done);
+    }
+  }
+
+  function fallbackCopy(text, done){
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      var ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      done(ok);
+    } catch (e) {
+      done(false);
+    }
+  }
+
+  function barRow(label, pct, approx, mine, uncertain, maxPct){
+    var scale = maxPct ? (100 / maxPct) : 1;
+    var width = Math.max(pct * scale, 2);
+    width = Math.min(width, 100);
+    var h = '<div class="bar-row">';
+    h += '<div class="bar-top"><span class="bar-opt-label' + (mine ? ' mine' : '') + '">' + label + (mine ? ' <span class="you-tag">You</span>' : '') + '</span>' + pctLabel(pct, approx, uncertain, mine) + '</div>';
+    h += '<div class="bar-track"><div class="bar-fill' + (mine ? ' mine' : '') + (uncertain ? ' hatched' : '') + '" style="width:' + width + '%"></div></div>';
+    h += '</div>';
+    return h;
+  }
+
+  function whereYouWorkInsight(picked, sorted){
+    if (!picked.length) return 'No answer given for this question.';
+    var opt = sorted.filter(function(o){ return o.id === picked[0]; })[0];
+    return 'You are among the ' + opt.pct + '% of 2026 respondents working in this kind of setting. ' + opt.context;
+  }
+
+  function phaseInsight(phase, q){
+    var pct = q.phaseBenchmarks[phase];
+    if (phase === 'using') {
+      return 'You are among the ' + pct + '% already using AI in L&D in some way. That is now a clear majority, up from 54% just last year, so using AI in this way has gone from early-adopter territory to simply how most L&D teams now work.';
+    }
+    if (phase === 'experimenting') {
+      return 'You are among the ' + pct + '% still experimenting or piloting. That means you have moved past pure exploration but have not yet rolled AI out as a standing part of your work. This group has been shrinking steadily, from 49% of respondents three years ago to 26% now, while the share already using AI regularly has climbed to 68% over the same period.';
+    }
+    return 'You are among the ' + pct + '% at the pre-use stage. That means your organization has not yet started exploring AI in L&D at all, which now makes you part of the smallest share in four years of this survey, down from a high of 19% in 2024.';
+  }
+
+  function choiceInsight(q, picked, sorted){
+    if (!picked.length) {
+      return q.optional ? 'You skipped this question.' : 'No answer given for this question.';
+    }
+    var rankOf = {};
+    sorted.forEach(function(o, i){ rankOf[o.id] = i + 1; });
+    var topId = picked.reduce(function(best, id){
+      var o = sorted.filter(function(x){ return x.id === id; })[0];
+      var bestOpt = sorted.filter(function(x){ return x.id === best; })[0];
+      return (!bestOpt || o.pct > bestOpt.pct) ? id : best;
+    }, picked[0]);
+    var topOpt = sorted.filter(function(o){ return o.id === topId; })[0];
+    var topRank = rankOf[topId];
+    if (topOpt.uncertain) {
+      return 'You picked "' + optLabel(topOpt) + '" as your top answer here. The report does not give a reliable figure for it though, the chart suggests somewhere around 2-5% of 2026 respondents picked it too, but the bar is too short to measure with any confidence, so treat that as a loose guide rather than a real benchmark.';
+    }
+    var standing;
+    var frac = topRank / sorted.length;
+    if (topRank === 1) standing = 'the single most common answer this year.';
+    else if (frac <= 0.34) standing = 'one of the more commonly cited answers this year.';
+    else if (frac <= 0.67) standing = 'a middling answer, neither rare nor dominant.';
+    else standing = 'one of the less commonly picked answers this year, so your view here is more of a minority one.';
+    return 'You are among the ' + (topOpt.approx ? 'roughly ' : '') + (Math.round(topOpt.pct*10)/10) + '% who also picked "' + optLabel(topOpt) + '", your strongest match here. Out of ' + sorted.length + ' options, that makes it ' + standing;
+  }
+
+})();
+</script>
+</body>
+</html>
